@@ -1,10 +1,12 @@
 # app/auth/auth_routes.py
 
-from fastapi import APIRouter, Request, Response, HTTPException
+from fastapi import APIRouter, Request, Response, HTTPException, Depends
 from passlib.hash import bcrypt
 from app.db.mongo import db
 from app.models.user_model import UserCreate, UserLogin
 from app.auth.auth_handler import create_token, verify_token
+from app.auth.auth_handler import get_current_user  # ✅ add this import if not already
+
 
 router = APIRouter()
 
@@ -40,3 +42,11 @@ async def login(user: UserLogin, response: Response):
 async def logout(response: Response):
     response.delete_cookie("session")
     return {"message": "Logged out successfully"}
+
+@router.get("/me")
+async def check_auth(user=Depends(get_current_user)):
+    return {
+        "user_id": str(user["user_id"]),
+        "email": user["email"],
+        "status": "authenticated"
+    }
