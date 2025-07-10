@@ -51,7 +51,7 @@ async def summarize_with_openrouter(text: str):
 
     body = {
         "model": "openai/gpt-4o",
-        "max_tokens": 3600,
+        "max_tokens": 3193,
         "messages": [
             {"role": "system", "content": "You are a book summarizer assistant."},
             {"role": "user", "content": prompt}
